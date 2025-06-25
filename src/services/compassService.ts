@@ -36,21 +36,38 @@ export class CompassService {
   /**
    * Start compass updates
    */
-  startCompassUpdates(
+  async startCompassUpdates(
     onHeadingChange: (heading: number, qiblaDirection: number) => void
-  ): void {
+  ): Promise<void> {
     this.onHeadingChange = onHeadingChange;
 
-    if (this.magnetometerSubscription) {
-      this.magnetometerSubscription.remove();
+    try {
+      // Check if magnetometer is available
+      const isAvailable = await Magnetometer.isAvailableAsync();
+      if (!isAvailable) {
+        console.warn('Magnetometer not available on this device');
+        // Provide a fallback with static direction
+        this.provideFallbackDirection();
+        return;
+      }
+
+      // Magnetometer doesn't require explicit permissions on most platforms
+      // Just proceed with initialization
+
+      if (this.magnetometerSubscription) {
+        this.magnetometerSubscription.remove();
+      }
+
+      this.magnetometerSubscription = Magnetometer.addListener((data) => {
+        this.updateHeading(data);
+      });
+
+      // Set update interval
+      Magnetometer.setUpdateInterval(COMPASS_SETTINGS.updateInterval);
+    } catch (error) {
+      console.error('Error starting compass updates:', error);
+      this.provideFallbackDirection();
     }
-
-    this.magnetometerSubscription = Magnetometer.addListener((data) => {
-      this.updateHeading(data);
-    });
-
-    // Set update interval
-    Magnetometer.setUpdateInterval(COMPASS_SETTINGS.updateInterval);
   }
 
   /**
@@ -222,5 +239,29 @@ export class CompassService {
    */
   formatHeading(heading: number): string {
     return `${Math.round(heading)}° ${this.getCardinalDirection(heading)}`;
+  }
+
+  /**
+   * Provide fallback direction when magnetometer is not available
+   */
+  private provideFallbackDirection(): void {
+    if (this.onHeadingChange) {
+      // Provide a static reading pointing north (0°) as fallback
+      const fallbackHeading = 0;
+      const qiblaDirection = this.calculateQiblaDirection(fallbackHeading);
+      this.onHeadingChange(fallbackHeading, qiblaDirection);
+    }
+  }
+
+  /**
+   * Check if device supports magnetometer
+   */
+  async isCompassSupported(): Promise<boolean> {
+    try {
+      return await Magnetometer.isAvailableAsync();
+    } catch (error) {
+      console.error('Error checking magnetometer availability:', error);
+      return false;
+    }
   }
 } 

@@ -32,6 +32,8 @@ export const QiblaCompass: React.FC<QiblaCompassProps> = ({
   const [isCalibrated, setIsCalibrated] = useState(false);
   const [calibrationProgress, setCalibrationProgress] = useState(0);
   const [isPointingTowardsQibla, setIsPointingTowardsQibla] = useState(false);
+  const [compassSupported, setCompassSupported] = useState(true);
+  const [compassError, setCompassError] = useState<string | null>(null);
 
   const compassRotation = useRef(new Animated.Value(0)).current;
   const kaabaRotation = useRef(new Animated.Value(0)).current;
@@ -40,46 +42,63 @@ export const QiblaCompass: React.FC<QiblaCompassProps> = ({
   const compassService = CompassService.getInstance();
 
   useEffect(() => {
-    // Initialize compass with location
-    compassService.initialize(location);
+    const initializeCompass = async () => {
+      try {
+        // Check if compass is supported
+        const supported = await compassService.isCompassSupported();
+        setCompassSupported(supported);
+        
+        if (!supported) {
+          setCompassError('Compass not available on this device. Showing approximate direction.');
+        }
 
-    // Start compass updates
-    compassService.startCompassUpdates((newHeading, newQiblaDirection) => {
-      setHeading(newHeading);
-      setQiblaDirection(newQiblaDirection);
+        // Initialize compass with location
+        compassService.initialize(location);
 
-      // Animate compass rotation
-      Animated.timing(compassRotation, {
-        toValue: -newHeading,
-        duration: 100,
-        useNativeDriver: true,
-      }).start();
+        // Start compass updates
+        await compassService.startCompassUpdates((newHeading, newQiblaDirection) => {
+          setHeading(newHeading);
+          setQiblaDirection(newQiblaDirection);
 
-      // Animate Kaaba rotation
-      Animated.timing(kaabaRotation, {
-        toValue: newQiblaDirection,
-        duration: 100,
-        useNativeDriver: true,
-      }).start();
+          // Animate compass rotation
+          Animated.timing(compassRotation, {
+            toValue: -newHeading,
+            duration: 100,
+            useNativeDriver: true,
+          }).start();
 
-      // Check if pointing towards qibla
-      const pointingTowardsQibla = compassService.isPointingTowardsQibla(newHeading);
-      setIsPointingTowardsQibla(pointingTowardsQibla);
+          // Animate Kaaba rotation
+          Animated.timing(kaabaRotation, {
+            toValue: newQiblaDirection,
+            duration: 100,
+            useNativeDriver: true,
+          }).start();
 
-      // Vibrate when pointing towards qibla
-      if (pointingTowardsQibla) {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          // Check if pointing towards qibla
+          const pointingTowardsQibla = compassService.isPointingTowardsQibla(newHeading);
+          setIsPointingTowardsQibla(pointingTowardsQibla);
+
+          // Vibrate when pointing towards qibla
+          if (pointingTowardsQibla) {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          }
+
+          // Update calibration status
+          const calibrationStatus = compassService.getCalibrationStatus();
+          setIsCalibrated(calibrationStatus.isCalibrated);
+          setCalibrationProgress(calibrationStatus.progress);
+
+          if (onCalibrationStatusChange) {
+            onCalibrationStatusChange(calibrationStatus.isCalibrated);
+          }
+        });
+      } catch (error) {
+        console.error('Error initializing compass:', error);
+        setCompassError('Failed to initialize compass. Please restart the app.');
       }
+    };
 
-      // Update calibration status
-      const calibrationStatus = compassService.getCalibrationStatus();
-      setIsCalibrated(calibrationStatus.isCalibrated);
-      setCalibrationProgress(calibrationStatus.progress);
-
-      if (onCalibrationStatusChange) {
-        onCalibrationStatusChange(calibrationStatus.isCalibrated);
-      }
-    });
+    initializeCompass();
 
     // Start pulse animation when pointing towards qibla
     const pulseAnimationLoop = Animated.loop(
@@ -265,7 +284,7 @@ export const QiblaCompass: React.FC<QiblaCompassProps> = ({
       </View>
 
       {/* Calibration Progress */}
-      {!isCalibrated && (
+      {!isCalibrated && compassSupported && (
         <View style={styles.calibrationProgress}>
           <View style={styles.progressBar}>
             <View
@@ -278,6 +297,13 @@ export const QiblaCompass: React.FC<QiblaCompassProps> = ({
           <Text style={styles.progressText}>
             {Math.round(calibrationProgress * 100)}% Calibrated
           </Text>
+        </View>
+      )}
+
+      {/* Compass Error/Warning */}
+      {compassError && (
+        <View style={styles.warningContainer}>
+          <Text style={styles.warningText}>{compassError}</Text>
         </View>
       )}
     </View>
@@ -486,5 +512,18 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: COLORS.textSecondary,
     textAlign: 'center',
+  },
+  warningContainer: {
+    marginTop: 15,
+    backgroundColor: COLORS.warning,
+    padding: 12,
+    borderRadius: 8,
+    width: '100%',
+  },
+  warningText: {
+    color: COLORS.surface,
+    fontSize: 12,
+    textAlign: 'center',
+    fontWeight: '500',
   },
 }); 
