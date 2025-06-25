@@ -1,0 +1,58 @@
+{
+  "expo": {
+    "name": "Qibla Finder - Islamic Prayer App",
+    "slug": "qibla-finder",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#2E7D32"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "This app needs location access to calculate accurate prayer times and qibla direction.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "This app needs location access to calculate accurate prayer times and qibla direction.",
+        "UIBackgroundModes": ["location", "background-processing"]
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#2E7D32"
+      },
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "VIBRATE",
+        "RECEIVE_BOOT_COMPLETED",
+        "WAKE_LOCK"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow Qibla Finder to use your location to calculate accurate prayer times and qibla direction."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#2E7D32",
+          "sounds": ["./assets/sounds/adhan.mp3"]
+        }
+      ]
+    ]
+  }
+} 
