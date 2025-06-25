@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -28,11 +28,7 @@ export const HomeScreen: React.FC = () => {
   const locationService = LocationService.getInstance();
   const storageService = StorageService.getInstance();
 
-  useEffect(() => {
-    initializeApp();
-  }, []);
-
-  const initializeApp = async () => {
+  const initializeApp = useCallback(async () => {
     try {
       setIsLoading(true);
       
@@ -62,7 +58,11 @@ export const HomeScreen: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    initializeApp();
+  }, [initializeApp]);
 
   const calculatePrayerTimes = async (currentLocation: Location) => {
     try {

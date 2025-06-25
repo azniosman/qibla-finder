@@ -64,7 +64,7 @@ export const PrayerTimeWidget: React.FC<PrayerTimeWidgetProps> = ({
     }
 
     return () => pulse.stop();
-  }, [timeUntilNext]);
+  }, [timeUntilNext, pulseAnimation]);
 
   const formatTimeUntil = (minutes: number): string => {
     if (minutes < 60) {

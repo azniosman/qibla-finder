@@ -1,5 +1,6 @@
 import * as Location from 'expo-location';
 import { Location as LocationType } from '../types';
+import { ErrorHandler } from '../utils/errorHandler';
 
 /**
  * Location service for handling GPS and location permissions
@@ -53,7 +54,7 @@ export class LocationService {
       if (!hasPermission) {
         const granted = await this.requestPermissions();
         if (!granted) {
-          return null;
+          throw ErrorHandler.createPermissionError('Location');
         }
       }
 

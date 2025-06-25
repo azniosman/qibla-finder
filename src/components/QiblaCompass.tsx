@@ -107,7 +107,7 @@ export const QiblaCompass: React.FC<QiblaCompassProps> = ({
     return () => {
       compassService.stopCompassUpdates();
     };
-  }, [location, isPointingTowardsQibla]);
+  }, [location, isPointingTowardsQibla, compassRotation, kaabaRotation, pulseAnimation, compassService, onCalibrationStatusChange]);
 
   const handleCalibrationHelp = () => {
     Alert.alert(
