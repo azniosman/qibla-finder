@@ -5,6 +5,8 @@ export interface Prayer {
   completed: boolean;
   loggedAt?: string;
   isQada?: boolean;
+  qadaCount?: number;
+  snoozedCount?: number;
 }
 
 export interface PrayerDay {
@@ -82,6 +84,9 @@ export interface NotificationSettings {
   sound: boolean;
   vibration: boolean;
   advanceMinutes: number;
+  soundName: 'adhan1' | 'adhan2' | 'bell' | 'chime' | 'none' | 'default';
+  allowSnooze: boolean;
+  qadaReminders: boolean;
   quietHours: {
     enabled: boolean;
     start: string;

@@ -56,11 +56,24 @@ export const NOTIFICATION_DEFAULTS = {
   advanceMinutes: 15,
   sound: true,
   vibration: true,
+  soundName: 'adhan1' as const,
+  allowSnooze: true,
+  qadaReminders: true,
   quietHours: {
     enabled: false,
     start: '22:00',
     end: '06:00',
   },
+} as const;
+
+// Available notification sounds
+export const NOTIFICATION_SOUNDS = {
+  'adhan1': 'Traditional Adhan',
+  'adhan2': 'Beautiful Adhan',
+  'bell': 'Gentle Bell',
+  'chime': 'Soft Chime',
+  'default': 'System Default',
+  'none': 'Silent',
 } as const;
 
 // Compass settings

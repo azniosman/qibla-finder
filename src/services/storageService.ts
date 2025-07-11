@@ -298,4 +298,30 @@ export class StorageService {
       return { totalKeys: 0, totalSize: 0 };
     }
   }
+
+  // Generic data methods
+  /**
+   * Save generic data with a key
+   */
+  async saveData(key: string, data: any): Promise<void> {
+    try {
+      await AsyncStorage.setItem(key, JSON.stringify(data));
+    } catch (error) {
+      console.error(`Error saving data for key ${key}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get generic data by key
+   */
+  async getData(key: string): Promise<any> {
+    try {
+      const data = await AsyncStorage.getItem(key);
+      return data ? JSON.parse(data) : null;
+    } catch (error) {
+      console.error(`Error getting data for key ${key}:`, error);
+      return null;
+    }
+  }
 } 

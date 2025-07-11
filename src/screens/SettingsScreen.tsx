@@ -12,7 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { StorageService } from '../services/storageService';
 import { NotificationService } from '../services/notificationService';
 import { AppSettings, NotificationSettings } from '../types';
-import { COLORS, CALCULATION_METHODS } from '../utils/constants';
+import { COLORS, CALCULATION_METHODS, NOTIFICATION_SOUNDS } from '../utils/constants';
 
 const DEFAULT_SETTINGS: AppSettings = {
   calculationMethod: 'ISNA',
@@ -32,6 +32,9 @@ const DEFAULT_NOTIFICATIONS: NotificationSettings = {
   sound: true,
   vibration: true,
   advanceMinutes: 15,
+  soundName: 'adhan1',
+  allowSnooze: true,
+  qadaReminders: true,
   quietHours: {
     enabled: false,
     start: '22:00',
@@ -113,16 +116,9 @@ export const SettingsScreen: React.FC = () => {
   };
 
   const handleNotificationSoundPress = () => {
-    const sounds = [
-      { key: 'adhan1', name: 'Adhan 1' },
-      { key: 'adhan2', name: 'Adhan 2' },
-      { key: 'bell', name: 'Bell' },
-      { key: 'none', name: 'None' },
-    ] as const;
-
-    const options = sounds.map(({ key, name }) => ({
+    const options = Object.entries(NOTIFICATION_SOUNDS).map(([key, name]) => ({
       text: name,
-      onPress: () => saveSettings({ ...settings, notificationSound: key }),
+      onPress: () => saveNotificationSettings({ ...notifications, soundName: key as keyof typeof NOTIFICATION_SOUNDS }),
     }));
 
     Alert.alert(
@@ -230,10 +226,7 @@ export const SettingsScreen: React.FC = () => {
           <TouchableOpacity style={styles.settingRow} onPress={handleNotificationSoundPress}>
             <Text style={styles.settingLabel}>Notification Sound</Text>
             <Text style={styles.settingValue}>
-              {settings.notificationSound === 'adhan1' && 'Adhan 1'}
-              {settings.notificationSound === 'adhan2' && 'Adhan 2'}
-              {settings.notificationSound === 'bell' && 'Bell'}
-              {settings.notificationSound === 'none' && 'None'}
+              {NOTIFICATION_SOUNDS[notifications.soundName]}
             </Text>
           </TouchableOpacity>
 
@@ -265,6 +258,30 @@ export const SettingsScreen: React.FC = () => {
               }
               trackColor={{ false: COLORS.background, true: COLORS.primary }}
               thumbColor={notifications.vibration ? COLORS.surface : COLORS.textSecondary}
+            />
+          </View>
+
+          <View style={styles.settingRow}>
+            <Text style={styles.settingLabel}>Allow Snooze</Text>
+            <Switch
+              value={notifications.allowSnooze}
+              onValueChange={(value) =>
+                saveNotificationSettings({ ...notifications, allowSnooze: value })
+              }
+              trackColor={{ false: COLORS.background, true: COLORS.primary }}
+              thumbColor={notifications.allowSnooze ? COLORS.surface : COLORS.textSecondary}
+            />
+          </View>
+
+          <View style={styles.settingRow}>
+            <Text style={styles.settingLabel}>Qada Reminders</Text>
+            <Switch
+              value={notifications.qadaReminders}
+              onValueChange={(value) =>
+                saveNotificationSettings({ ...notifications, qadaReminders: value })
+              }
+              trackColor={{ false: COLORS.background, true: COLORS.primary }}
+              thumbColor={notifications.qadaReminders ? COLORS.surface : COLORS.textSecondary}
             />
           </View>
         </View>

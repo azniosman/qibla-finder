@@ -1,6 +1,7 @@
 import * as Notifications from 'expo-notifications';
 import { NotificationSettings } from '../types';
 import { NOTIFICATION_DEFAULTS } from '../utils/constants';
+import { StorageService } from './storageService';
 
 /**
  * Notification service for handling prayer time alerts
@@ -32,14 +33,23 @@ export class NotificationService {
         return;
       }
 
+      // Configure notification categories with actions
+      await this.setupNotificationCategories();
+
       // Configure notification behavior
       Notifications.setNotificationHandler({
-        handleNotification: async () => ({
-          shouldShowAlert: true,
-          shouldPlaySound: true,
-          shouldSetBadge: false,
-        }),
+        handleNotification: async () => {
+          const settings = await this.getNotificationSettings();
+          return {
+            shouldShowAlert: true,
+            shouldPlaySound: settings?.sound ?? true,
+            shouldSetBadge: false,
+          };
+        },
       });
+
+      // Setup notification response handlers
+      this.setupNotificationResponseHandlers();
 
       this.isInitialized = true;
     } catch (error) {
@@ -48,12 +58,13 @@ export class NotificationService {
   }
 
   /**
-   * Schedule prayer time notification
+   * Schedule prayer time notification with custom sound
    */
   async schedulePrayerNotification(
     prayerName: string,
     prayerTime: string,
-    advanceMinutes: number = NOTIFICATION_DEFAULTS.advanceMinutes
+    advanceMinutes: number = NOTIFICATION_DEFAULTS.advanceMinutes,
+    soundName: string = 'adhan1'
   ): Promise<string | null> {
     try {
       if (!this.isInitialized) {
@@ -73,10 +84,19 @@ export class NotificationService {
 
       const identifier = await Notifications.scheduleNotificationAsync({
         content: {
-          title: `Prayer Time Reminder`,
-          body: `${prayerName} prayer is in ${advanceMinutes} minutes`,
-          data: { prayerName, prayerTime, type: 'prayer_reminder' },
-          sound: 'adhan.mp3', // Custom adhan sound
+          title: `${prayerName} Prayer Time`,
+          body: advanceMinutes > 0 
+            ? `${prayerName} prayer is in ${advanceMinutes} minutes`
+            : `It's time for ${prayerName} prayer`,
+          data: { 
+            prayerName, 
+            prayerTime, 
+            type: 'prayer_reminder',
+            soundName,
+            canSnooze: true
+          },
+          sound: this.getSoundFile(soundName),
+          categoryIdentifier: 'PRAYER_REMINDER',
         },
         trigger: notificationTime,
       });
@@ -256,6 +276,133 @@ export class NotificationService {
     } catch (error) {
       console.error('Error requesting notification permissions:', error);
       return false;
+    }
+  }
+
+  /**
+   * Setup notification categories with snooze actions
+   */
+  private async setupNotificationCategories(): Promise<void> {
+    await Notifications.setNotificationCategoryAsync('PRAYER_REMINDER', [
+      {
+        identifier: 'SNOOZE_5',
+        buttonTitle: 'Snooze 5 min',
+        options: { opensAppToForeground: false },
+      },
+      {
+        identifier: 'SNOOZE_10',
+        buttonTitle: 'Snooze 10 min',
+        options: { opensAppToForeground: false },
+      },
+      {
+        identifier: 'MARK_COMPLETED',
+        buttonTitle: 'Mark Completed',
+        options: { opensAppToForeground: true },
+      },
+    ]);
+  }
+
+  /**
+   * Setup notification response handlers
+   */
+  private setupNotificationResponseHandlers(): void {
+    Notifications.addNotificationResponseReceivedListener(async (response) => {
+      const { actionIdentifier, notification } = response;
+      const { prayerName, prayerTime } = notification.request.content.data;
+
+      switch (actionIdentifier) {
+        case 'SNOOZE_5':
+          await this.snoozeNotification(prayerName, prayerTime, 5);
+          break;
+        case 'SNOOZE_10':
+          await this.snoozeNotification(prayerName, prayerTime, 10);
+          break;
+        case 'MARK_COMPLETED':
+          await this.markPrayerCompleted(prayerName);
+          break;
+      }
+    });
+  }
+
+  /**
+   * Snooze a prayer notification
+   */
+  async snoozeNotification(
+    prayerName: string,
+    prayerTime: string,
+    snoozeMinutes: number
+  ): Promise<void> {
+    try {
+      const snoozeTime = new Date();
+      snoozeTime.setMinutes(snoozeTime.getMinutes() + snoozeMinutes);
+
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: `${prayerName} Prayer Reminder (Snoozed)`,
+          body: `Reminder: ${prayerName} prayer time was ${prayerTime}`,
+          data: { 
+            prayerName, 
+            prayerTime, 
+            type: 'prayer_snooze',
+            snoozed: true
+          },
+          sound: 'default',
+          categoryIdentifier: 'PRAYER_REMINDER',
+        },
+        trigger: snoozeTime,
+      });
+    } catch (error) {
+      console.error('Error snoozing notification:', error);
+    }
+  }
+
+  /**
+   * Mark prayer as completed from notification
+   */
+  private async markPrayerCompleted(prayerName: string): Promise<void> {
+    try {
+      const storageService = StorageService.getInstance();
+      const today = new Date().toISOString().split('T')[0] || '';
+      let prayerDay = await storageService.getPrayerRecord(today);
+
+      if (prayerDay) {
+        const prayer = prayerDay.prayers[prayerName as keyof typeof prayerDay.prayers];
+        if (prayer) {
+          prayer.completed = true;
+          prayer.loggedAt = new Date().toISOString();
+          await storageService.savePrayerRecord(today, prayerDay);
+        }
+      }
+    } catch (error) {
+      console.error('Error marking prayer completed:', error);
+    }
+  }
+
+  /**
+   * Get sound file based on setting
+   */
+  private getSoundFile(soundName: string): string {
+    const soundMap: Record<string, string> = {
+      'adhan1': 'adhan1.mp3',
+      'adhan2': 'adhan2.mp3',
+      'bell': 'bell.mp3',
+      'chime': 'chime.mp3',
+      'none': undefined as any,
+      'default': 'default',
+    };
+    return soundMap[soundName] || 'default';
+  }
+
+  /**
+   * Get notification settings
+   */
+  private async getNotificationSettings(): Promise<NotificationSettings | null> {
+    try {
+      const storageService = StorageService.getInstance();
+      return await storageService.getNotificationSettings();
+    } catch (error) {
+      console.error('Error getting notification settings:', error);
+      return null;
     }
   }
 

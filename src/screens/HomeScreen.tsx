@@ -7,8 +7,20 @@ import {
   RefreshControl,
   Alert,
   StatusBar,
+  TouchableOpacity,
 } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withDelay,
+  FadeIn,
+  SlideInDown,
+} from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import { LinearGradient } from 'expo-linear-gradient';
+import Svg, { Circle, Path, Defs, LinearGradient as SvgLinearGradient, Stop } from 'react-native-svg';
 import { COLORS } from '../utils/constants';
 import { QiblaCompass } from '../components/QiblaCompass';
 import { PrayerTimeWidget } from '../components/PrayerTimeWidget';
@@ -18,12 +30,21 @@ import { PrayerCalculator } from '../utils/prayerCalculations';
 import { Location, PrayerTimes, PrayerDay } from '../types';
 
 export const HomeScreen: React.FC = () => {
+  const navigation = useNavigation();
   const [location, setLocation] = useState<Location | null>(null);
   const [prayerTimes, setPrayerTimes] = useState<PrayerTimes | null>(null);
   const [prayerDay, setPrayerDay] = useState<PrayerDay | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isCompassCalibrated, setIsCompassCalibrated] = useState(false);
+  
+  // Animation values
+  const headerOpacity = useSharedValue(0);
+  const quickActionsScale = useSharedValue(0.8);
+  
+  // Animated styles - defined at component level to avoid conditional hooks
+  const headerAnimatedStyle = useAnimatedStyle(() => ({ opacity: headerOpacity.value }));
+  const quickActionsAnimatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: quickActionsScale.value }] }));
 
   const locationService = LocationService.getInstance();
   const storageService = StorageService.getInstance();
@@ -62,6 +83,10 @@ export const HomeScreen: React.FC = () => {
 
   useEffect(() => {
     initializeApp();
+    
+    // Animate in components
+    headerOpacity.value = withDelay(300, withSpring(1));
+    quickActionsScale.value = withDelay(600, withSpring(1));
   }, [initializeApp]);
 
   const calculatePrayerTimes = async (currentLocation: Location) => {
@@ -147,6 +172,26 @@ export const HomeScreen: React.FC = () => {
     setIsCompassCalibrated(isCalibrated);
   };
 
+  const handleQuickAction = (action: string) => {
+    switch (action) {
+      case 'prayer-log':
+        navigation.navigate('Prayer Times' as never);
+        break;
+      case 'statistics':
+        // TODO: Navigate to statistics screen when implemented
+        Alert.alert('Statistics', 'Prayer statistics feature coming soon!');
+        break;
+      case 'qada':
+        navigation.navigate('Qada' as never);
+        break;
+      case 'settings':
+        navigation.navigate('Settings' as never);
+        break;
+      default:
+        break;
+    }
+  };
+
   if (isLoading) {
     return (
       <SafeAreaView style={styles.loadingContainer}>
@@ -183,54 +228,86 @@ export const HomeScreen: React.FC = () => {
           />
         }
       >
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>Qibla Finder</Text>
-          <Text style={styles.headerSubtitle}>
-            {isCompassCalibrated ? '✓ Compass Calibrated' : 'Calibrating Compass...'}
-          </Text>
-        </View>
+        {/* Enhanced Header */}
+        <Animated.View style={[styles.header, headerAnimatedStyle]} entering={FadeIn.delay(200)}>
+          <LinearGradient
+            colors={[COLORS.background, `${COLORS.primary}10`]}
+            style={styles.headerGradient}
+          >
+            <View style={styles.headerContent}>
+              <Text style={styles.headerTitle}>Qibla Finder</Text>
+              <Text style={styles.headerSubtitle}>
+                {isCompassCalibrated ? '✅ Compass Ready' : '🔄 Calibrating Compass...'}
+              </Text>
+              
+              {/* Islamic greeting based on time */}
+              <Text style={styles.greetingText}>
+                {new Date().getHours() < 12 ? '🌅 Good Morning' : 
+                 new Date().getHours() < 18 ? '☀️ Good Afternoon' : '🌙 Good Evening'}
+              </Text>
+            </View>
+          </LinearGradient>
+        </Animated.View>
 
-        {/* Qibla Compass */}
+        {/* Qibla Compass with Animation */}
         {location && (
-          <QiblaCompass
-            location={location}
-            onCalibrationStatusChange={handleCalibrationStatusChange}
-          />
+          <Animated.View entering={SlideInDown.delay(400)}>
+            <QiblaCompass
+              location={location}
+              onCalibrationStatusChange={handleCalibrationStatusChange}
+            />
+          </Animated.View>
         )}
 
-        {/* Prayer Times */}
+        {/* Prayer Times with Animation */}
         {prayerTimes && (
-          <PrayerTimeWidget
-            prayerTimes={prayerTimes}
-            prayerDay={prayerDay}
-            onPrayerToggle={handlePrayerToggle}
-            onPrayerPress={handlePrayerPress}
-          />
+          <Animated.View entering={SlideInDown.delay(600)}>
+            <PrayerTimeWidget
+              prayerTimes={prayerTimes}
+              prayerDay={prayerDay}
+              onPrayerToggle={handlePrayerToggle}
+              onPrayerPress={handlePrayerPress}
+            />
+          </Animated.View>
         )}
 
-        {/* Quick Actions */}
-        <View style={styles.quickActions}>
+        {/* Enhanced Quick Actions */}
+        <Animated.View 
+          style={[styles.quickActions, quickActionsAnimatedStyle]} 
+          entering={SlideInDown.delay(800)}
+        >
           <Text style={styles.sectionTitle}>Quick Actions</Text>
           <View style={styles.actionButtons}>
-            <View style={styles.actionButton}>
-              <Text style={styles.actionIcon}>📅</Text>
-              <Text style={styles.actionText}>Prayer Log</Text>
-            </View>
-            <View style={styles.actionButton}>
-              <Text style={styles.actionIcon}>📊</Text>
-              <Text style={styles.actionText}>Statistics</Text>
-            </View>
-            <View style={styles.actionButton}>
-              <Text style={styles.actionIcon}>🔄</Text>
-              <Text style={styles.actionText}>Qada</Text>
-            </View>
-            <View style={styles.actionButton}>
-              <Text style={styles.actionIcon}>⚙️</Text>
-              <Text style={styles.actionText}>Settings</Text>
-            </View>
+            <QuickActionButton
+              icon="📅"
+              title="Prayer Log"
+              subtitle="View history"
+              onPress={() => handleQuickAction('prayer-log')}
+              color={COLORS.primary}
+            />
+            <QuickActionButton
+              icon="📊"
+              title="Statistics"
+              subtitle="Track progress"
+              onPress={() => handleQuickAction('statistics')}
+              color={COLORS.accent}
+            />
+            <QuickActionButton
+              icon="🔄"
+              title="Qada"
+              subtitle="Missed prayers"
+              onPress={() => handleQuickAction('qada')}
+              color={COLORS.warning}
+            />
+            <QuickActionButton
+              icon="⚙️"
+              title="Settings"
+              subtitle="Preferences"
+              onPress={() => handleQuickAction('settings')}
+              color={COLORS.secondary}
+            />
           </View>
-        </View>
+        </Animated.View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -273,51 +350,178 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    padding: 20,
+    marginBottom: 10,
+    overflow: 'hidden',
+    borderRadius: 20,
+    marginHorizontal: 20,
+    marginTop: 10,
+  },
+  headerGradient: {
+    padding: 24,
+    alignItems: 'center',
+  },
+  headerContent: {
     alignItems: 'center',
   },
   headerTitle: {
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: 'bold',
     color: COLORS.textPrimary,
-    marginBottom: 4,
+    marginBottom: 6,
+    textAlign: 'center',
+    letterSpacing: 1,
   },
   headerSubtitle: {
     fontSize: 14,
     color: COLORS.textSecondary,
+    marginBottom: 4,
+  },
+  greetingText: {
+    fontSize: 16,
+    color: COLORS.primary,
+    fontWeight: '600',
   },
   quickActions: {
     padding: 20,
+    marginTop: 10,
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: 20,
+    fontWeight: '700',
     color: COLORS.textPrimary,
-    marginBottom: 16,
+    marginBottom: 20,
+    textAlign: 'center',
   },
   actionButtons: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  actionButtonContainer: {
+    flex: 1,
   },
   actionButton: {
     alignItems: 'center',
-    backgroundColor: COLORS.surface,
-    padding: 16,
-    borderRadius: 12,
-    minWidth: 80,
+    borderRadius: 16,
+    overflow: 'hidden',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 6,
+    position: 'relative',
+  },
+  actionButtonGradient: {
+    padding: 16,
+    alignItems: 'center',
+    minHeight: 100,
+    justifyContent: 'center',
+    width: '100%',
+    position: 'relative',
+  },
+  actionButtonPattern: {
+    position: 'absolute',
+    top: -10,
+    right: -10,
+    opacity: 0.1,
+  },
+  patternOverlay: {
+    opacity: 0.3,
   },
   actionIcon: {
-    fontSize: 24,
+    fontSize: 28,
     marginBottom: 8,
   },
-  actionText: {
-    fontSize: 12,
-    fontWeight: '500',
-    color: COLORS.textPrimary,
+  actionTitle: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: COLORS.surface,
+    textAlign: 'center',
+    marginBottom: 2,
   },
-}); 
+  actionSubtitle: {
+    fontSize: 10,
+    fontWeight: '500',
+    color: COLORS.surface,
+    opacity: 0.9,
+    textAlign: 'center',
+  },
+});
+
+// Enhanced Quick Action Button Component
+interface QuickActionButtonProps {
+  icon: string;
+  title: string;
+  subtitle: string;
+  onPress: () => void;
+  color: string;
+}
+
+const QuickActionButton: React.FC<QuickActionButtonProps> = ({
+  icon,
+  title,
+  subtitle,
+  onPress,
+  color,
+}) => {
+  const scale = useSharedValue(1);
+  const rotation = useSharedValue(0);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        { scale: scale.value },
+        { rotate: `${rotation.value}deg` },
+      ],
+    };
+  });
+
+  const handlePress = () => {
+    scale.value = withSpring(0.9, {}, () => {
+      scale.value = withSpring(1.05, {}, () => {
+        scale.value = withSpring(1);
+      });
+    });
+    rotation.value = withSpring(5, {}, () => {
+      rotation.value = withSpring(0);
+    });
+    onPress();
+  };
+
+  return (
+    <TouchableOpacity onPress={handlePress} style={styles.actionButtonContainer}>
+      <Animated.View style={[styles.actionButton, animatedStyle]}>
+        <LinearGradient
+          colors={[color, `${color}80`]}
+          style={styles.actionButtonGradient}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+        >
+          {/* Background Pattern */}
+          <View style={styles.actionButtonPattern}>
+            <Svg width={40} height={40} viewBox="0 0 100 100" style={styles.patternOverlay}>
+              <Defs>
+                <SvgLinearGradient id="actionGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <Stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.1" />
+                  <Stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.3" />
+                </SvgLinearGradient>
+              </Defs>
+              <Circle cx="50" cy="50" r="30" fill="url(#actionGrad)" />
+              <Path
+                d="M20 20 Q50 10 80 20 Q50 40 80 60 Q50 70 20 60 Q50 40 20 20"
+                fill="none"
+                stroke="#FFFFFF"
+                strokeWidth="0.5"
+                opacity="0.2"
+              />
+            </Svg>
+          </View>
+          
+          <Text style={styles.actionIcon}>{icon}</Text>
+          <Text style={styles.actionTitle}>{title}</Text>
+          <Text style={styles.actionSubtitle}>{subtitle}</Text>
+        </LinearGradient>
+      </Animated.View>
+    </TouchableOpacity>
+  );
+};

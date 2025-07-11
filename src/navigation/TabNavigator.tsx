@@ -4,6 +4,10 @@ import { Text } from 'react-native';
 import { HomeScreen } from '../screens/HomeScreen';
 import { QiblaScreen } from '../screens/QiblaScreen';
 import { PrayerTimesScreen } from '../screens/PrayerTimesScreen';
+import { QadaScreen } from '../screens/QadaScreen';
+import { CalendarScreen } from '../screens/CalendarScreen';
+import { DhikrScreen } from '../screens/DhikrScreen';
+import { AsmaUlHusnaScreen } from '../screens/AsmaUlHusnaScreen';
 import { SettingsScreen } from '../screens/SettingsScreen';
 import { COLORS } from '../utils/constants';
 
@@ -25,13 +29,16 @@ export const TabNavigator: React.FC = () => {
         tabBarStyle: {
           backgroundColor: COLORS.surface,
           borderTopColor: COLORS.background,
-          paddingVertical: 5,
-          height: 60,
+          paddingVertical: 2,
+          height: 65,
         },
         tabBarLabelStyle: {
-          fontSize: 12,
+          fontSize: 10,
           fontWeight: '500',
-          marginTop: 5,
+          marginTop: 2,
+        },
+        tabBarIconStyle: {
+          marginTop: 2,
         },
         headerStyle: {
           backgroundColor: COLORS.surface,
@@ -73,6 +80,46 @@ export const TabNavigator: React.FC = () => {
             <TabIcon focused={focused} emoji="🧭" />
           ),
           headerTitle: 'Qibla Direction',
+        }}
+      />
+      <Tab.Screen
+        name="Qada"
+        component={QadaScreen}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <TabIcon focused={focused} emoji="🔄" />
+          ),
+          headerTitle: 'Qada Management',
+        }}
+      />
+      <Tab.Screen
+        name="Calendar"
+        component={CalendarScreen}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <TabIcon focused={focused} emoji="📅" />
+          ),
+          headerTitle: 'Islamic Calendar',
+        }}
+      />
+      <Tab.Screen
+        name="Dhikr"
+        component={DhikrScreen}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <TabIcon focused={focused} emoji="📿" />
+          ),
+          headerTitle: 'Dhikr Counter',
+        }}
+      />
+      <Tab.Screen
+        name="Names"
+        component={AsmaUlHusnaScreen}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <TabIcon focused={focused} emoji="☪️" />
+          ),
+          headerTitle: '99 Names of Allah',
         }}
       />
       <Tab.Screen
