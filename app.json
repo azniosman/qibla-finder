@@ -23,6 +23,7 @@
       }
     },
     "android": {
+      "package": "com.qiblafinder.islamicapp",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#2E7D32"

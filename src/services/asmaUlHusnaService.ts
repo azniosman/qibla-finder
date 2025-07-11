@@ -267,47 +267,557 @@ export class AsmaUlHusnaService {
       meaning: 'The One who is gentle and kind to His slaves.',
       benefit: 'Brings gentleness and ease in difficulties.'
     },
-    // I'll add a selection of the most important remaining names to keep the file manageable
-    // while maintaining the core 99 names structure
     {
-      number: 95,
+      number: 31,
+      arabic: 'الْخَبِيرُ',
+      transliteration: 'Al-Khabir',
+      translation: 'The Aware',
+      meaning: 'The One who knows the inner secrets of all things.',
+      benefit: 'Increases awareness and understanding.'
+    },
+    {
+      number: 32,
+      arabic: 'الْحَلِيمُ',
+      transliteration: 'Al-Halim',
+      translation: 'The Forbearing',
+      meaning: 'The One who delays punishment for those who deserve it.',
+      benefit: 'Develops patience and tolerance.'
+    },
+    {
+      number: 33,
+      arabic: 'الْعَظِيمُ',
+      transliteration: 'Al-Azim',
+      translation: 'The Magnificent',
+      meaning: 'The One who is greatest in every aspect.',
+      benefit: 'Brings magnificence and greatness.'
+    },
+    {
+      number: 34,
+      arabic: 'الْغَفُورُ',
+      transliteration: 'Al-Ghafur',
+      translation: 'The Forgiving',
+      meaning: 'The One who forgives sins and faults.',
+      benefit: 'Brings divine forgiveness.'
+    },
+    {
+      number: 35,
+      arabic: 'الشَّكُورُ',
+      transliteration: 'Ash-Shakur',
+      translation: 'The Appreciative',
+      meaning: 'The One who appreciates good deeds.',
+      benefit: 'Increases gratitude and thankfulness.'
+    },
+    {
+      number: 36,
+      arabic: 'الْعَلِيُّ',
+      transliteration: 'Al-Ali',
+      translation: 'The Exalted',
+      meaning: 'The One who is higher than everything.',
+      benefit: 'Elevates status and rank.'
+    },
+    {
+      number: 37,
+      arabic: 'الْكَبِيرُ',
+      transliteration: 'Al-Kabir',
+      translation: 'The Great',
+      meaning: 'The One who is greater than everything.',
+      benefit: 'Brings greatness and honor.'
+    },
+    {
+      number: 38,
+      arabic: 'الْحَفِيظُ',
+      transliteration: 'Al-Hafiz',
+      translation: 'The Preserver',
+      meaning: 'The One who preserves and protects.',
+      benefit: 'Provides protection and preservation.'
+    },
+    {
+      number: 39,
+      arabic: 'الْمُقِيتُ',
+      transliteration: 'Al-Muqit',
+      translation: 'The Nourisher',
+      meaning: 'The One who provides nourishment.',
+      benefit: 'Provides sustenance and nourishment.'
+    },
+    {
+      number: 40,
+      arabic: 'الْحَسِيبُ',
+      transliteration: 'Al-Hasib',
+      translation: 'The Reckoner',
+      meaning: 'The One who takes account of everything.',
+      benefit: 'Brings accountability and justice.'
+    },
+    {
+      number: 41,
+      arabic: 'الْجَلِيلُ',
+      transliteration: 'Al-Jalil',
+      translation: 'The Majestic',
+      meaning: 'The One who is majestic and sublime.',
+      benefit: 'Brings majesty and dignity.'
+    },
+    {
+      number: 42,
+      arabic: 'الْكَرِيمُ',
+      transliteration: 'Al-Karim',
+      translation: 'The Generous',
+      meaning: 'The One who is generous and noble.',
+      benefit: 'Increases generosity and nobility.'
+    },
+    {
+      number: 43,
+      arabic: 'الرَّقِيبُ',
+      transliteration: 'Ar-Raqib',
+      translation: 'The Watchful',
+      meaning: 'The One who watches over all creation.',
+      benefit: 'Provides divine protection and vigilance.'
+    },
+    {
+      number: 44,
+      arabic: 'الْمُجِيبُ',
+      transliteration: 'Al-Mujib',
+      translation: 'The Responsive',
+      meaning: 'The One who responds to prayers.',
+      benefit: 'Prayers are answered quickly.'
+    },
+    {
+      number: 45,
+      arabic: 'الْوَاسِعُ',
+      transliteration: 'Al-Wasi\'',
+      translation: 'The All-Encompassing',
+      meaning: 'The One whose knowledge encompasses everything.',
+      benefit: 'Expands knowledge and understanding.'
+    },
+    {
+      number: 46,
+      arabic: 'الْحَكِيمُ',
+      transliteration: 'Al-Hakim',
+      translation: 'The Wise',
+      meaning: 'The One who is wise in all His actions.',
+      benefit: 'Increases wisdom and good judgment.'
+    },
+    {
+      number: 47,
+      arabic: 'الْوَدُودُ',
+      transliteration: 'Al-Wadud',
+      translation: 'The Loving',
+      meaning: 'The One who loves His righteous servants.',
+      benefit: 'Increases love and affection.'
+    },
+    {
+      number: 48,
+      arabic: 'الْمَجِيدُ',
+      transliteration: 'Al-Majid',
+      translation: 'The Glorious',
+      meaning: 'The One who is glorious and noble.',
+      benefit: 'Brings glory and honor.'
+    },
+    {
+      number: 49,
+      arabic: 'الْبَاعِثُ',
+      transliteration: 'Al-Ba\'ith',
+      translation: 'The Resurrector',
+      meaning: 'The One who resurrects the dead.',
+      benefit: 'Renews life and energy.'
+    },
+    {
+      number: 50,
+      arabic: 'الشَّهِيدُ',
+      transliteration: 'Ash-Shahid',
+      translation: 'The Witness',
+      meaning: 'The One who witnesses everything.',
+      benefit: 'Truth is revealed and witnessed.'
+    },
+    {
+      number: 51,
+      arabic: 'الْحَقُّ',
+      transliteration: 'Al-Haqq',
+      translation: 'The Truth',
+      meaning: 'The One who is the ultimate truth.',
+      benefit: 'Reveals truth and dispels falsehood.'
+    },
+    {
+      number: 52,
+      arabic: 'الْوَكِيلُ',
+      transliteration: 'Al-Wakil',
+      translation: 'The Trustee',
+      meaning: 'The One who manages all affairs.',
+      benefit: 'Provides reliable support and management.'
+    },
+    {
+      number: 53,
+      arabic: 'الْقَوِيُّ',
+      transliteration: 'Al-Qawi',
+      translation: 'The Strong',
+      meaning: 'The One who possesses complete strength.',
+      benefit: 'Provides strength and power.'
+    },
+    {
+      number: 54,
+      arabic: 'الْمَتِينُ',
+      transliteration: 'Al-Matin',
+      translation: 'The Firm',
+      meaning: 'The One who is firm and steadfast.',
+      benefit: 'Brings firmness and stability.'
+    },
+    {
+      number: 55,
+      arabic: 'الْوَلِيُّ',
+      transliteration: 'Al-Wali',
+      translation: 'The Friend',
+      meaning: 'The One who is the friend of believers.',
+      benefit: 'Provides friendship and support.'
+    },
+    {
+      number: 56,
+      arabic: 'الْحَمِيدُ',
+      transliteration: 'Al-Hamid',
+      translation: 'The Praiseworthy',
+      meaning: 'The One who is worthy of all praise.',
+      benefit: 'Increases praise and commendation.'
+    },
+    {
+      number: 57,
+      arabic: 'الْمُحْصِي',
+      transliteration: 'Al-Muhsi',
+      translation: 'The Counter',
+      meaning: 'The One who counts and enumerates all things.',
+      benefit: 'Brings precision and accuracy.'
+    },
+    {
+      number: 58,
+      arabic: 'الْمُبْدِئُ',
+      transliteration: 'Al-Mubdi\'',
+      translation: 'The Originator',
+      meaning: 'The One who originates creation.',
+      benefit: 'Initiates new beginnings.'
+    },
+    {
+      number: 59,
+      arabic: 'الْمُعِيدُ',
+      transliteration: 'Al-Mu\'id',
+      translation: 'The Restorer',
+      meaning: 'The One who restores creation.',
+      benefit: 'Restores and renews.'
+    },
+    {
+      number: 60,
+      arabic: 'الْمُحْيِي',
+      transliteration: 'Al-Muhyi',
+      translation: 'The Giver of Life',
+      meaning: 'The One who gives life to all things.',
+      benefit: 'Brings life and vitality.'
+    },
+    {
+      number: 61,
+      arabic: 'الْمُمِيتُ',
+      transliteration: 'Al-Mumit',
+      translation: 'The Taker of Life',
+      meaning: 'The One who causes death.',
+      benefit: 'Reminds of mortality and accountability.'
+    },
+    {
+      number: 62,
+      arabic: 'الْحَيُّ',
+      transliteration: 'Al-Hayy',
+      translation: 'The Living',
+      meaning: 'The One who is eternally alive.',
+      benefit: 'Brings life and energy.'
+    },
+    {
+      number: 63,
+      arabic: 'الْقَيُّومُ',
+      transliteration: 'Al-Qayyum',
+      translation: 'The Self-Existing',
+      meaning: 'The One who is self-sustaining.',
+      benefit: 'Provides self-sufficiency.'
+    },
+    {
+      number: 64,
+      arabic: 'الْوَاجِدُ',
+      transliteration: 'Al-Wajid',
+      translation: 'The Finder',
+      meaning: 'The One who finds whatever He wills.',
+      benefit: 'Helps find what is sought.'
+    },
+    {
+      number: 65,
+      arabic: 'الْمَاجِدُ',
+      transliteration: 'Al-Majid',
+      translation: 'The Noble',
+      meaning: 'The One who is noble and generous.',
+      benefit: 'Brings nobility and honor.'
+    },
+    {
+      number: 66,
+      arabic: 'الْوَاحِدُ',
+      transliteration: 'Al-Wahid',
+      translation: 'The Unique',
+      meaning: 'The One who is unique and without equal.',
+      benefit: 'Brings uniqueness and distinction.'
+    },
+    {
+      number: 67,
+      arabic: 'الصَّمَدُ',
+      transliteration: 'As-Samad',
+      translation: 'The Eternal',
+      meaning: 'The One who is eternal and independent.',
+      benefit: 'Provides eternal support.'
+    },
+    {
+      number: 68,
+      arabic: 'الْقَادِرُ',
+      transliteration: 'Al-Qadir',
+      translation: 'The Able',
+      meaning: 'The One who is capable of everything.',
+      benefit: 'Increases capability and competence.'
+    },
+    {
+      number: 69,
+      arabic: 'الْمُقْتَدِرُ',
+      transliteration: 'Al-Muqtadir',
+      translation: 'The Powerful',
+      meaning: 'The One who has absolute power.',
+      benefit: 'Grants power and authority.'
+    },
+    {
+      number: 70,
+      arabic: 'الْمُقَدِّمُ',
+      transliteration: 'Al-Muqaddim',
+      translation: 'The Expediter',
+      meaning: 'The One who brings forward.',
+      benefit: 'Accelerates progress and advancement.'
+    },
+    {
+      number: 71,
+      arabic: 'الْمُؤَخِّرُ',
+      transliteration: 'Al-Mu\'akhkhir',
+      translation: 'The Delayer',
+      meaning: 'The One who delays what He wills.',
+      benefit: 'Provides wisdom in timing.'
+    },
+    {
+      number: 72,
+      arabic: 'الأوَّلُ',
+      transliteration: 'Al-Awwal',
+      translation: 'The First',
+      meaning: 'The One who is first without beginning.',
+      benefit: 'Leadership and precedence.'
+    },
+    {
+      number: 73,
+      arabic: 'الآخِرُ',
+      transliteration: 'Al-Akhir',
+      translation: 'The Last',
+      meaning: 'The One who is last without end.',
+      benefit: 'Brings lasting success.'
+    },
+    {
+      number: 74,
+      arabic: 'الظَّاهِرُ',
+      transliteration: 'Az-Zahir',
+      translation: 'The Manifest',
+      meaning: 'The One who is apparent and evident.',
+      benefit: 'Makes truth clear and evident.'
+    },
+    {
+      number: 75,
+      arabic: 'الْبَاطِنُ',
+      transliteration: 'Al-Batin',
+      translation: 'The Hidden',
+      meaning: 'The One who is hidden from perception.',
+      benefit: 'Reveals hidden knowledge.'
+    },
+    {
+      number: 76,
+      arabic: 'الْوَالِي',
+      transliteration: 'Al-Wali',
+      translation: 'The Governor',
+      meaning: 'The One who governs all affairs.',
+      benefit: 'Provides good governance.'
+    },
+    {
+      number: 77,
+      arabic: 'الْمُتَعَالِي',
+      transliteration: 'Al-Muta\'ali',
+      translation: 'The Self-Exalted',
+      meaning: 'The One who is exalted above all.',
+      benefit: 'Elevates status and position.'
+    },
+    {
+      number: 78,
+      arabic: 'الْبَرُّ',
+      transliteration: 'Al-Barr',
+      translation: 'The Source of Goodness',
+      meaning: 'The One who is kind and good.',
+      benefit: 'Increases kindness and goodness.'
+    },
+    {
+      number: 79,
+      arabic: 'التَّوَّابُ',
+      transliteration: 'At-Tawwab',
+      translation: 'The Acceptor of Repentance',
+      meaning: 'The One who accepts repentance.',
+      benefit: 'Forgiveness for sins and mistakes.'
+    },
+    {
+      number: 80,
+      arabic: 'الْمُنْتَقِمُ',
+      transliteration: 'Al-Muntaqim',
+      translation: 'The Avenger',
+      meaning: 'The One who punishes the wicked.',
+      benefit: 'Justice against oppressors.'
+    },
+    {
+      number: 81,
+      arabic: 'العَفُوُّ',
+      transliteration: 'Al-\'Afuw',
+      translation: 'The Pardoner',
+      meaning: 'The One who pardons sins.',
+      benefit: 'Brings pardon and forgiveness.'
+    },
+    {
+      number: 82,
+      arabic: 'الرَّؤُوفُ',
+      transliteration: 'Ar-Ra\'uf',
+      translation: 'The Compassionate',
+      meaning: 'The One who is full of compassion.',
+      benefit: 'Increases compassion and mercy.'
+    },
+    {
+      number: 83,
+      arabic: 'مَالِكُ الْمُلْكِ',
+      transliteration: 'Malik al-Mulk',
+      translation: 'The Owner of Sovereignty',
+      meaning: 'The One who owns all dominion.',
+      benefit: 'Grants authority and leadership.'
+    },
+    {
+      number: 84,
+      arabic: 'ذُوالْجَلاَلِ وَالإكْرَامِ',
+      transliteration: 'Dhul-Jalali wal-Ikram',
+      translation: 'The Lord of Majesty and Bounty',
+      meaning: 'The One who possesses majesty and honor.',
+      benefit: 'Brings majesty and divine bounty.'
+    },
+    {
+      number: 85,
+      arabic: 'الْمُقْسِطُ',
+      transliteration: 'Al-Muqsit',
+      translation: 'The Equitable',
+      meaning: 'The One who is just and fair.',
+      benefit: 'Establishes justice and fairness.'
+    },
+    {
+      number: 86,
+      arabic: 'الْجَامِعُ',
+      transliteration: 'Al-Jami\'',
+      translation: 'The Gatherer',
+      meaning: 'The One who gathers all creation.',
+      benefit: 'Unites and brings together.'
+    },
+    {
+      number: 87,
+      arabic: 'الْغَنِيُّ',
+      transliteration: 'Al-Ghani',
+      translation: 'The Independent',
+      meaning: 'The One who is free from all needs.',
+      benefit: 'Brings independence and self-sufficiency.'
+    },
+    {
+      number: 88,
+      arabic: 'الْمُغْنِي',
+      transliteration: 'Al-Mughni',
+      translation: 'The Enricher',
+      meaning: 'The One who enriches whom He wills.',
+      benefit: 'Brings wealth and prosperity.'
+    },
+    {
+      number: 89,
+      arabic: 'الْمَانِعُ',
+      transliteration: 'Al-Mani\'',
+      translation: 'The Preventer',
+      meaning: 'The One who prevents what He wills.',
+      benefit: 'Protection from harm and evil.'
+    },
+    {
+      number: 90,
+      arabic: 'الضَّارُّ',
+      transliteration: 'Ad-Darr',
+      translation: 'The Distressor',
+      meaning: 'The One who brings distress when necessary.',
+      benefit: 'Wisdom in facing difficulties.'
+    },
+    {
+      number: 91,
+      arabic: 'النَّافِعُ',
+      transliteration: 'An-Nafi\'',
+      translation: 'The Beneficial',
+      meaning: 'The One who benefits whom He wills.',
+      benefit: 'Brings benefit and advantage.'
+    },
+    {
+      number: 92,
       arabic: 'النُّورُ',
       transliteration: 'An-Nur',
       translation: 'The Light',
-      meaning: 'The One who guides His creation to the right path.',
-      benefit: 'Brings spiritual enlightenment and guidance.'
+      meaning: 'The One who illuminates all creation.',
+      benefit: 'Brings spiritual enlightenment.'
     },
     {
-      number: 96,
+      number: 93,
       arabic: 'الْهَادِي',
       transliteration: 'Al-Hadi',
       translation: 'The Guide',
-      meaning: 'The One who guides His creation to the truth.',
-      benefit: 'Provides guidance in all matters of life.'
+      meaning: 'The One who guides to the right path.',
+      benefit: 'Provides guidance and direction.'
     },
     {
-      number: 97,
+      number: 94,
       arabic: 'الْبَدِيعُ',
       transliteration: 'Al-Badi\'',
       translation: 'The Incomparable',
-      meaning: 'The One who created the creation in a way that has never been done before.',
-      benefit: 'Enhances creativity and originality.'
+      meaning: 'The One who created without precedent.',
+      benefit: 'Enhances creativity and innovation.'
     },
     {
-      number: 98,
+      number: 95,
       arabic: 'الْبَاقِي',
       transliteration: 'Al-Baqi',
       translation: 'The Everlasting',
-      meaning: 'The One who remains forever and does not perish.',
+      meaning: 'The One who remains forever.',
       benefit: 'Brings permanence and lasting success.'
     },
     {
-      number: 99,
+      number: 96,
+      arabic: 'الْوَارِثُ',
+      transliteration: 'Al-Warith',
+      translation: 'The Inheritor',
+      meaning: 'The One who inherits all creation.',
+      benefit: 'Provides lasting legacy.'
+    },
+    {
+      number: 97,
+      arabic: 'الرَّشِيدُ',
+      transliteration: 'Ar-Rashid',
+      translation: 'The Guide to Right Path',
+      meaning: 'The One who guides to righteousness.',
+      benefit: 'Provides wise guidance.'
+    },
+    {
+      number: 98,
       arabic: 'الصَّبُورُ',
       transliteration: 'As-Sabur',
       translation: 'The Patient',
-      meaning: 'The One who does not quickly punish the sinners.',
+      meaning: 'The One who is patient with His creation.',
       benefit: 'Develops patience and perseverance.'
+    },
+    {
+      number: 99,
+      arabic: 'الْمَلِكُ',
+      transliteration: 'Al-Malik',
+      translation: 'The Sovereign',
+      meaning: 'The One who has absolute sovereignty.',
+      benefit: 'Grants authority and leadership.'
     }
   ];
 
